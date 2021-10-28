@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytz
+from random import randint
 
 class ContaCorrente:
     """
@@ -31,6 +32,7 @@ class ContaCorrente:
         self._agencia = agencia
         self._num_conta = num_conta
         self._transacoes = []
+        self.cartoes = []
 
     def consultar_saldo(self):
         print(f'Seu saldo atual é R${self._saldo:,.2f}')
@@ -65,15 +67,23 @@ class ContaCorrente:
         conta_destino._saldo += montante
         conta_destino._transacoes.append((montante, conta_destino._saldo, ContaCorrente._data_e_hora()))
 
+
 class CartaoCredito:
 
+    @staticmethod
+    def _data_e_hora():
+        fuso_BR = pytz.timezone('Brazil/East')
+        horario_BR = datetime.now(fuso_BR)
+        return horario_BR
+
     def __init__(self, titular, conta_corrente):
-        self.numero = None
+        self.numero = randint(1000000000000000, 9999999999999999)
         self.titular = titular
-        self.validade = None
-        self.cod_seguranca = None
-        self.limite = None
+        self.validade = '{}/{}'.format(CartaoCredito._data_e_hora().month, CartaoCredito._data_e_hora().year + 4)
+        self.cod_seguranca = '{}{}{}'.format(randint(0, 9), randint(0, 9), randint(0, 9))
+        self.limite = 1000
         self.conta_corrente = conta_corrente
+        conta_corrente.cartoes.append(self)
 
 
 # programa 1
@@ -106,4 +116,10 @@ conta_kaio = ContaCorrente('Kaio Pedreira', '111.222.333-44', 1234, 56789)
 
 cartao_kaio = CartaoCredito('Kaio', conta_kaio)
 
-print(cartao_kaio.conta_corrente._num_conta)
+# print(cartao_kaio.conta_corrente._agencia)
+
+print(conta_kaio.cartoes[0].numero)
+
+print(cartao_kaio.validade)
+
+print(cartao_kaio.cod_seguranca)
