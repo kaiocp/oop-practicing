@@ -25,12 +25,12 @@ class ContaCorrente:
         return horario_BR.strftime('%d/%m/%Y %H:%M:%S')
 
     def __init__(self, nome, cpf, agencia, num_conta):
-        self._nome = nome
-        self._cpf = cpf
+        self.nome = nome
+        self.cpf = cpf
         self._saldo = 0
         self._limite = None
-        self._agencia = agencia
-        self._num_conta = num_conta
+        self.agencia = agencia
+        self.num_conta = num_conta
         self._transacoes = []
         self.cartoes = []
 
@@ -81,45 +81,20 @@ class CartaoCredito:
         self.titular = titular
         self.validade = '{}/{}'.format(CartaoCredito._data_e_hora().month, CartaoCredito._data_e_hora().year + 4)
         self.cod_seguranca = '{}{}{}'.format(randint(0, 9), randint(0, 9), randint(0, 9))
+        self._senha = '1234'
         self.limite = 1000
         self.conta_corrente = conta_corrente
         conta_corrente.cartoes.append(self)
 
+    @property
+    def senha(self):
+        return self._senha
 
-# programa 1
+    @senha.setter
+    def senha(self, valor):
+        if len(valor) == 4 and valor.isnumeric():
+            self._senha = valor
+            print('Senha alterada com sucesso!')
+        else:
+            print('Nova senha inválida.')
 
-conta_kaio = ContaCorrente('Kaio Pedreira', '111.222.333-44', 1234, 56789)
-#
-# conta_kaio.consultar_saldo()
-#
-# # deposito
-# conta_kaio.fazer_deposito(10000)
-# conta_kaio.consultar_saldo()
-#
-# # sacando
-# conta_kaio.consultar_limtite_cheque_especial()
-#
-# print('-' * 20)
-# print(conta_kaio.consultar_historico_transacoes())
-#
-# print('-' * 20)
-# conta_mae_kaio = ContaCorrente('Dona Lili', '00000000000', 4321, 43321)
-# conta_kaio.transferir(1000, conta_mae_kaio)
-#
-# conta_kaio.consultar_saldo()
-# conta_mae_kaio.consultar_saldo()
-# print('-' * 20)
-# conta_kaio.consultar_historico_transacoes()
-# conta_mae_kaio.consultar_historico_transacoes()
-
-# programa 2
-
-cartao_kaio = CartaoCredito('Kaio', conta_kaio)
-
-# print(cartao_kaio.conta_corrente._agencia)
-
-print(conta_kaio.cartoes[0].numero)
-
-print(cartao_kaio.validade)
-
-print(cartao_kaio.cod_seguranca)
